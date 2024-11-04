@@ -2,143 +2,74 @@
 
 <img src="./assets/Stripe Integration .png">
 
-This project implements a subscription management system using Node.js, Express, and Stripe's API. It allows users to manage subscriptions, handle payments, and validate coupons easily.
+Stripe Subscriptions with Node.js
 
-## Table of Contents
+This project demonstrates how to integrate Stripe subscriptions into a Node.js application using the Express framework. The application provides a front-end with a pricing table built using Bootstrap, along with features like coupon validation and plan status display.
 
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [API Endpoints](#api-endpoints)
-- [Webhooks](#webhooks)
-- [Environment Variables](#environment-variables)
-- [Contributing](#contributing)
-- [License](#license)
+Features
+Displays a Bootstrap-based pricing table with multiple subscription plans.
+Fetches and displays plan pricing dynamically from Stripe.
+Highlights the active subscription plan.
+Supports coupon validation to apply discounts on plans.
+Prerequisites
+Ensure you have the following installed:
 
-## Features
+Node.js
+npm
+A Stripe account with active subscription products and plans.
+Getting Started
+1. Clone the Repository
+bash
+Copy code
+git clone https://github.com/your-username/stripe-subscriptions-nodejs.git
+cd stripe-subscriptions-nodejs
+2. Install Dependencies
+bash
+Copy code
+npm install
+3. Set Up Environment Variables
+Create a .env file in the root of the project with the following variables:
 
-- View subscription plans and corresponding prices.
-- Subscribe to plans with Stripe Checkout.
-- Handle coupon validation.
-- Redirect users to a billing portal for managing subscriptions.
-- Listen to Stripe webhooks for subscription updates.
+env
+Copy code
+STRIPE_SECRET_KEY=your_stripe_secret_key
+STRIPE_PUBLISHABLE_KEY=your_stripe_publishable_key
+Replace your_stripe_secret_key and your_stripe_publishable_key with your actual Stripe keys from your Stripe dashboard.
 
-## Installation
+4. Run the Application
+bash
+Copy code
+node app.js
+The application will run on http://localhost:3000 by default.
 
-1. **Clone the Repository**
+Endpoints
+Frontend Routes
+GET / - Displays the pricing table with subscription plans.
+GET /subscribe?plan={planType} - Redirects users to subscribe to a specific plan.
+API Routes
+GET /api/get-all-prices - Fetches all Stripe subscription plan prices.
+POST /validate-coupon - Validates a coupon code and applies discounts on the subscription.
+Project Structure
+graphql
+Copy code
+stripe-subscriptions-nodejs/
+├── views/                 # EJS templates for rendering the frontend
+├── public/                # Public assets (CSS, JS)
+├── routes/                # Express route handlers
+│   ├── index.js           # Main routing for subscription pages
+│   ├── api.js             # API routes for fetching prices and validating coupons
+├── app.js                 # Main application file
+└── README.md              # Project documentation
+Using Coupons
+Enter a coupon code in the provided input field in the pricing table. Click "Apply Coupon" to validate and see the updated price if the coupon is valid.
 
-   ```bash
-   git clone https://github.com/yourusername/subscription-management-system.git
-   cd subscription-management-system
-   ```
-
-2. **Install Dependencies**
-
-   ```bash
-   npm install
-   ```
-
-3. **Setup Environment Variables**
-
-   Create a `.env` file in the root directory and add the following variables:
-
-   ```plaintext
-   STRIPE_SECRET_KEY=your_stripe_secret_key
-   STRIPE_WEBHOOK_SECRET_KEY=your_stripe_webhook_secret_key
-   BASE_URL=http://localhost:3000
-   ```
-
-   Replace `your_stripe_secret_key` and `your_stripe_webhook_secret_key` with your actual Stripe keys.
-
-## Usage
-
-1. **Run the Server**
-
-   ```bash
-   npm start
-   ```
-
-   The server will start on port 3000.
-
-2. **Access the Application**
-
-   Open your web browser and go to `http://localhost:3000`.
-
-## API Endpoints
-
-### 1. Home Route
-
-- **GET** `/`
-
-  Renders the main page of the application.
-
-### 2. Get Price by Product ID
-
-- **GET** `/get-price/:productId`
-
-  Retrieves price details for a specific product.
-
-  **Parameters:**
-  - `productId`: ID of the product.
-
-### 3. Get All Prices
-
-- **GET** `/api/get-all-prices`
-
-  Fetches all active prices and their corresponding product names.
-
-### 4. Subscribe to a Plan
-
-- **GET** `/subscribe`
-
-  Subscribes a user to a specific plan.
-
-  **Query Parameters:**
-  - `plan`: Name of the subscription plan.
-  - `coupon` (optional): Coupon code to apply.
-
-### 5. Success Route
-
-- **GET** `/success`
-
-  Displays a message upon successful subscription.
-
-### 6. Cancel Route
-
-- **GET** `/cancel`
-
-  Redirects users back to the home page after canceling the subscription.
-
-### 7. Customer Billing Portal
-
-- **GET** `/customers/:customerId`
-
-  Redirects to Stripe's billing portal for managing subscriptions.
-
-### 8. Webhook
-
-- **POST** `/webhook`
-
-  Receives and handles webhook events from Stripe.
-
-### 9. Validate Coupon
-
-- **POST** `/validate-coupon`
-
-  Validates if a coupon is valid.
-
-  **Request Body:**
-  - `coupon`: The coupon code to validate.
-
-## Webhooks
-
-This application listens for the following events from Stripe:
-
-- `checkout.session.completed` - Triggered when a new subscription is started.
-- `invoice.paid` - Triggered when an invoice is successfully paid.
-- `invoice.payment_failed` - Triggered when an invoice payment fails.
-- `customer.subscription.updated` - Triggered when a subscription is updated.
-
+Technologies Used
+Node.js - Backend runtime environment.
+Express.js - Node.js web application framework.
+Stripe API - For subscription management.
+Bootstrap - For styling the front-end.
+License
+This project is open-source and available under the MIT License.
 ## Environment Variables
 
 - `STRIPE_SECRET_KEY`: Your Stripe secret API key.
