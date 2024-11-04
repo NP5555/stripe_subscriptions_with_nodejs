@@ -34,44 +34,6 @@ app.get('/get-price/:productId', async (req, res) => {
     }
 });
 
- // Fetch all customers
- 
-app.get('/api/customers', async (req, res) => {
-    try {
-        // Fetch all customers
-        const customers = await stripe.customers.list({ limit: 100 }); // adjust limit as needed
-        
-        // Fetch subscriptions for each customer
-        const customersWithPlans = await Promise.all(customers.data.map(async (customer) => {
-            // Fetch active subscription for this customer
-            const subscriptions = await stripe.subscriptions.list({
-                customer: customer.id,
-                status: 'active',
-                expand: ['data.items.price.product'],
-            });
-
-            // If customer has an active subscription, include plan details
-            return {
-                id: customer.id,
-                name: customer.name,
-                email: customer.email,
-                subscription: subscriptions.data.map((sub) => ({
-                    id: sub.id,
-                    status: sub.status,
-                    planName: sub.items.data[0].price.product.name,
-                    price: sub.items.data[0].price.unit_amount / 100,
-                    currency: sub.items.data[0].price.currency,
-                }))
-            };
-        }));
-
-        res.json({ success: true, customers: customersWithPlans });
-    } catch (error) {
-        console.error('Error fetching customers:', error);
-        res.status(500).json({ success: false, message: 'Failed to fetch customers' });
-    }
-});
-
 
 
 app.get('/api/get-all-prices', async (req, res) => {
@@ -181,6 +143,81 @@ app.get('/success', async (req, res) => {
 app.get('/cancel', (req, res) => {
     res.redirect('/');
 });
+
+
+// Import Stripe
+// const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+
+// Route to get all customer IDs
+app.get('/api/get-all-customers', async (req, res) => {
+    try {
+        // Fetch the list of all customers from Stripe
+        const customers = await stripe.customers.list({ limit: 100 });
+        
+        // Map customer data to just customer IDs
+        const customerIds = customers.data.map(customer => customer.id);
+
+        res.json({
+            success: true,
+            customerIds: customerIds
+        });
+    } catch (error) {
+        console.error('Error fetching customers:', error);
+        res.status(500).json({
+            success: false,
+            message: 'Failed to fetch customer data',
+            error: error.message
+        });
+    }
+});
+
+// Fetch and display all customers and their plan details
+app.get('/customers', async (req, res) => {
+    try {
+        const customers = await stripe.customers.list({ limit: 10 }); // Adjust limit as needed
+        const customerData = [];
+
+        for (const customer of customers.data) {
+            const subscriptions = await stripe.subscriptions.list({
+                customer: customer.id,
+                status: 'all',
+                limit: 10
+            });
+
+            const planDetails = subscriptions.data.map(subscription => {
+                const plan = subscription.items.data[0].plan;
+                return {
+                    planId: plan.id,
+                    nickname: plan.nickname,
+                    amount: plan.amount / 100,
+                    currency: plan.currency,
+                    interval: plan.interval,
+                    status: subscription.status,
+                    start_date: new Date(subscription.start_date * 1000),
+                    current_period_end: new Date(subscription.current_period_end * 1000)
+                };
+            });
+
+            customerData.push({
+                customerId: customer.id,
+                customerName: customer.name || 'No Name',
+                email: customer.email,
+                plans: planDetails
+            });
+        }
+
+        res.render('customers', { customerData });
+    } catch (error) {
+        console.error('Error fetching customers:', error);
+        res.status(500).send('Failed to fetch customer data');
+    }
+});
+
+
+
+
+
+
 
 // Customer billing portal route
 app.get('/customers/:customerId', async (req, res) => {
