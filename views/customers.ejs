@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Plans</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-900 text-gray-100">
+    <div class="container mx-auto py-8 px-4">
+        <h1 class="text-4xl font-extrabold text-center text-white mb-12">Customer and Plan Details</h1>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
+            <% customerData.forEach(customer => { %>
+            <div class="bg-gray-800 rounded-lg shadow-lg p-6 hover:shadow-xl transition-shadow duration-300">
+                <h2 class="text-xl font-semibold text-yellow-400 mb-2"><%= customer.customerName %></h2>
+                <p class="text-gray-400 mb-4"><%= customer.email %></p>
+
+                <div class="space-y-4">
+                    <% customer.plans.forEach(plan => { %>
+                    <div class="p-4 bg-gray-700 rounded-lg shadow-inner">
+                        <p><strong class="text-gray-300">Plan:</strong> <span class="text-yellow-400"><%= plan.nickname %></span> - $<%= plan.amount %> <%= plan.currency.toUpperCase() %></p>
+                        <p><strong class="text-gray-300">Interval:</strong> <span class="text-gray-200"><%= plan.interval %></span></p>
+                        <p><strong class="text-gray-300">Status:</strong> <span class="text-gray-200"><%= plan.status %></span></p>
+                        <p><strong class="text-gray-300">Start Date:</strong> <span class="text-gray-200"><%= plan.start_date.toLocaleDateString() %></span></p>
+                        <p><strong class="text-gray-300">End Date:</strong> <span class="text-gray-200"><%= plan.current_period_end.toLocaleDateString() %></span></p>
+                    </div>
+                    <% }) %>
+                </div>
+            </div>
+            <% }) %>
+        </div>
+    </div>
+</body>
+</html>
