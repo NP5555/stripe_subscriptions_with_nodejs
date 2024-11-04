@@ -12,131 +12,50 @@
 <body>
     <div class="p-5">
         <!-- Header -->
-        <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
-            <h1 class="display-4 fw-normal">Pricing</h1>
-            <p class="fs-5 text-muted text-wrap">
-                Explore our flexible plans tailored for individuals and teams. The Starter Plan offers essential
-                features, <br> While the Pro and Premium plans enhance functionality with priority support. <br> For unlimited
-                users, the Extreme plan provides advanced analytics and custom integrations. Perfect for growth!
-            </p>
-        </div>
-
         <div class="container p-3">
-            <div class="row row-cols-1 row-cols-md-4 mb-3 text-center">
-                <!-- Starter Plan -->
-                <div class="col">
-                    <div class="card mb-4 rounded-3 shadow-sm">
-                        <div class="card-header py-3 text-white bg-dark border-dark">
-                            <h4 class="my-0 fw-normal">Starter</h4>
-                        </div>
-                        <div class="card-body">
-                            <h1 id="starter-price" class="card-title pricing-card-title">$--</h1>
-                            <small class="text-muted fw-light">/weekly</small>
-                            <ul class="list-unstyled mt-3 mb-4 fw-bold">
-                                <li>10 users included</li>
-                                <li>2 GB of storage</li>
-                                <li>Email support</li>
-                                <li>Help center access</li>
-                            </ul>
-                            <p class="lead">The Starter Plan is perfect for individuals or small teams just getting
-                                started.</p>
-                            <div class="mb-3">
-                                <input type="text" class="form-control mb-2" placeholder="Enter coupon code"
-                                    id="coupon-starter">
-                                <button onclick="validateCoupon('starter')"
-                                    class="w-100 btn btn-sm btn-secondary mb-2">Apply Coupon</button>
-                            </div>
-                            <a type="button" href="/subscribe?plan=starter" id="subscribe-starter"
-                                class="w-100 btn btn-lg btn-outline-dark">Subscribe</a>
-                        </div>
-                    </div>
+            <div >
+                <div class="pricing-header p-3 pb-md-4 mx-auto text-center">
+                    <h1 class="display-4 fw-bold">Pricing</h1>
+                    <p class="fs-5 text-muted text-wrap">
+                        Quickly build an effective pricing table for your potential customers with this Bootstrap example.
+                        It’s built with default Bootstrap components and utilities with little customization.
+                    </p>
                 </div>
-
-                <!-- Pro Plan -->
-                <div class="col">
-                    <div class="card mb-4 rounded-3 shadow-sm">
-                        <div class="card-header py-3 text-white bg-dark border-dark">
-                            <h4 class="my-0 fw-normal">Pro</h4>
-                        </div>
-                        <div class="card-body">
-                            <h1 id="pro-price" class="card-title pricing-card-title">$--</h1>
-                            <small class="text-muted fw-light">/monthly</small>
-                            <ul class="list-unstyled mt-3 mb-4 fw-bold">
-                                <li>20 users included</li>
-                                <li>10 GB of storage</li>
-                                <li>Priority email support</li>
-                                <li>Help center access</li>
-                            </ul>
-                            <p class="lead">Designed for growing teams, offering enhanced features and flexibility.</p>
-                            <div class="mb-3">
-                                <input type="text" class="form-control mb-2" placeholder="Enter coupon code"
-                                    id="coupon-pro">
-                                <button onclick="validateCoupon('pro')"
-                                    class="w-100 btn btn-sm btn-secondary mb-2">Apply Coupon</button>
+            
+                <div class="container p-3">
+                    <div class="row row-cols-1 row-cols-md-4 mb-3 text-center">
+                        <!-- Loop through each plan and add green dot for active plan -->
+                        <% ['starter', 'pro', 'premium', 'extreme'].forEach(planType => { %>
+                            <div class="col">
+                                <div class="card mb-4 rounded-3 shadow-sm">
+                                    <div class="card-header py-3 text-white bg-dark border-dark d-flex justify-content-between align-items-center">
+                                        <h4 class="my-0 fw-normal"><%= planType.charAt(0).toUpperCase() + planType.slice(1) %></h4>
+                                        <!-- Display green dot if this plan is active -->
+                                        <span id="<%= planType %>-active-indicator" class="badge bg-success" style="display: none;">&bull;</span>
+                                    </div>
+                                    <div class="card-body">
+                                        <h1 id="<%= planType %>-price" class="card-title pricing-card-title">$--</h1>
+                                        <small class="text-muted fw-light">/<%= planType === 'starter' ? 'weekly' : planType === 'pro' ? 'monthly' : 'yearly' %></small>
+                                        <ul class="list-unstyled mt-3 mb-4 fw-bold">
+                                            <li><%= planType === 'starter' ? '10 users included' : planType === 'pro' ? '20 users included' : planType === 'premium' ? '30 users included' : 'Unlimited users' %></li>
+                                            <li><%= planType === 'starter' ? '2 GB of storage' : planType === 'pro' ? '10 GB of storage' : planType === 'premium' ? '15 GB of storage' : '20 GB of storage' %></li>
+                                            <li><%= planType === 'starter' ? 'Email support' : planType === 'pro' || planType === 'premium' || planType === 'extreme' ? 'Phone and email support' : 'Priority support' %></li>
+                                            <li>Help center access</li>
+                                        </ul>
+                                        <p class="lead"><%= planType === 'starter' ? 'The Starter Plan is perfect for individuals or small teams just getting started.' : planType === 'pro' ? 'Designed for growing teams, offering enhanced features and flexibility.' : planType === 'premium' ? 'Unlock the full potential with personalized onboarding support.' : 'Access exclusive features like advanced analytics and custom integrations.' %></p>
+                                        <div class="mb-3">
+                                            <input type="text" class="form-control mb-2" placeholder="Enter coupon code" id="coupon-<%= planType %>">
+                                            <button onclick="validateCoupon('<%= planType %>')" class="w-100 btn btn-sm btn-secondary mb-2">Apply Coupon</button>
+                                        </div>
+                                        <a type="button" href="/subscribe?plan=<%= planType %>" id="subscribe-<%= planType %>" class="w-100 btn btn-lg btn-outline-dark">Subscribe</a>
+                                    </div>
+                                </div>
                             </div>
-                            <a type="button" href="/subscribe?plan=pro" id="subscribe-pro"
-                                class="w-100 btn btn-lg btn-outline-dark">Subscribe</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Premium Plan -->
-                <div class="col">
-                    <div class="card mb-4 rounded-3 shadow-sm">
-                        <div class="card-header py-3 text-white bg-dark border-dark">
-                            <h4 class="my-0 fw-normal">Premium</h4>
-                        </div>
-                        <div class="card-body">
-                            <h1 id="premium-price" class="card-title pricing-card-title">$--</h1>
-                            <small class="text-muted fw-light">/yearly</small>
-                            <ul class="list-unstyled mt-3 mb-4 fw-bold">
-                                <li>30 users included</li>
-                                <li>15 GB of storage</li>
-                                <li>Phone and email support</li>
-                                <li>Help center access</li>
-                            </ul>
-                            <p class="lead">Unlock the full potential with personalized onboarding support.</p>
-                            <div class="mb-3">
-                                <input type="text" class="form-control mb-2" placeholder="Enter coupon code"
-                                    id="coupon-premium">
-                                <button onclick="validateCoupon('premium')"
-                                    class="w-100 btn btn-sm btn-secondary mb-2">Apply Coupon</button>
-                            </div>
-                            <a type="button" href="/subscribe?plan=premium" id="subscribe-premium"
-                                class="w-100 btn btn-lg btn-outline-dark">Subscribe</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Extreme Plan -->
-                <div class="col">
-                    <div class="card mb-4 rounded-3 shadow-sm">
-                        <div class="card-header py-3 text-white bg-dark border-dark">
-                            <h4 class="my-0 fw-normal">Extreme</h4>
-                        </div>
-                        <div class="card-body">
-                            <h1 id="extreme-price" class="card-title pricing-card-title">$--</h1>
-                            <small class="text-muted fw-light">/yearly</small>
-                            <ul class="list-unstyled mt-3 mb-4 fw-bold">
-                                <li>Unlimited users</li>
-                                <li>20 GB of storage</li>
-                                <li>Phone and email support</li>
-                                <li>Help center access</li>
-                            </ul>
-                            <p class="lead">Access exclusive features like advanced analytics and custom integrations.
-                            </p>
-                            <div class="mb-3">
-                                <input type="text" class="form-control mb-2" placeholder="Enter coupon code"
-                                    id="coupon-extreme">
-                                <button onclick="validateCoupon('extreme')"
-                                    class="w-100 btn btn-sm btn-secondary mb-2">Apply Coupon</button>
-                            </div>
-                            <a type="button" href="/subscribe?plan=extreme" id="subscribe-extreme"
-                                class="w-100 btn btn-lg btn-outline-dark">Subscribe</a>
-                        </div>
+                        <% }); %>
                     </div>
                 </div>
             </div>
+            
         </div>
     </div>
 
@@ -228,6 +147,50 @@
                 alert('Error validating coupon');
             }
         }
+
+
+        document.addEventListener('DOMContentLoaded', async () => {
+        try {
+            const response = await fetch('/api/get-all-prices');
+            const data = await response.json();
+
+            if (data.success) {
+                const plans = data.prices;
+                const activePlan = data.activePlan; // Retrieve active plan name
+
+                // Show green dot on active plan card
+                if (activePlan) {
+                    document.getElementById(`${activePlan}-active-indicator`).style.display = 'inline';
+                }
+
+                // Fetch prices and set them in the DOM
+                Object.keys(plans).forEach(plan => {
+                    fetch(`/get-price/${plans[plan]}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.success) {
+                                const price = (data.price.unit_amount / 100).toFixed(2);
+                                document.getElementById(`${plan}-price`).innerText = `$${price}`;
+                            } else {
+                                console.error(`Failed to fetch price for ${plan}:`, data.message);
+                            }
+                        })
+                        .catch(error => console.error(`Error fetching ${plan} price:`, error));
+                });
+            } else {
+                console.error('Failed to fetch price IDs');
+            }
+        } catch (error) {
+            console.error('Error fetching price data:', error);
+        }
+    });
+
+
+
+
+
+
+
     </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"

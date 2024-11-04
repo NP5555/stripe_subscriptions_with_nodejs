@@ -1,6 +1,6 @@
 # Subscription Management System with Stripe
 
-<img src="./Stripe Integration .png">
+<img src="./assets/Stripe Integration .png">
 
 This project implements a subscription management system using Node.js, Express, and Stripe's API. It allows users to manage subscriptions, handle payments, and validate coupons easily.
 

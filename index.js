@@ -26,12 +26,53 @@ app.get('/get-price/:productId', async (req, res) => {
                 product: price.product,
                 recurring: price.recurring,
             },
+             
         });
     } catch (error) {
         console.error('Error retrieving price:', error);
         res.status(500).json({ success: false, message: 'Failed to retrieve price' });
     }
 });
+
+ // Fetch all customers
+ 
+app.get('/api/customers', async (req, res) => {
+    try {
+        // Fetch all customers
+        const customers = await stripe.customers.list({ limit: 100 }); // adjust limit as needed
+        
+        // Fetch subscriptions for each customer
+        const customersWithPlans = await Promise.all(customers.data.map(async (customer) => {
+            // Fetch active subscription for this customer
+            const subscriptions = await stripe.subscriptions.list({
+                customer: customer.id,
+                status: 'active',
+                expand: ['data.items.price.product'],
+            });
+
+            // If customer has an active subscription, include plan details
+            return {
+                id: customer.id,
+                name: customer.name,
+                email: customer.email,
+                subscription: subscriptions.data.map((sub) => ({
+                    id: sub.id,
+                    status: sub.status,
+                    planName: sub.items.data[0].price.product.name,
+                    price: sub.items.data[0].price.unit_amount / 100,
+                    currency: sub.items.data[0].price.currency,
+                }))
+            };
+        }));
+
+        res.json({ success: true, customers: customersWithPlans });
+    } catch (error) {
+        console.error('Error fetching customers:', error);
+        res.status(500).json({ success: false, message: 'Failed to fetch customers' });
+    }
+});
+
+
 
 app.get('/api/get-all-prices', async (req, res) => {
     try {
