@@ -1,7 +1,6 @@
 require('dotenv').config();
 const express = require('express');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -11,9 +10,11 @@ app.set('view engine', 'ejs');
 app.get('/', async (req, res) => {
     res.render('index.ejs');
 });
+
+// Get all the plans with prices
 app.get('/get-price/:productId', async (req, res) => {
     const { productId } = req.params;
- 
+
     try {
         // Retrieve the price details from Stripe
         const price = await stripe.prices.retrieve(productId);
@@ -26,7 +27,7 @@ app.get('/get-price/:productId', async (req, res) => {
                 product: price.product,
                 recurring: price.recurring,
             },
-             
+
         });
     } catch (error) {
         console.error('Error retrieving price:', error);
@@ -34,8 +35,7 @@ app.get('/get-price/:productId', async (req, res) => {
     }
 });
 
-
-
+// to get all prices >Helps to show dynamically on frontend
 app.get('/api/get-all-prices', async (req, res) => {
     try {
         const prices = await stripe.prices.list({
@@ -132,7 +132,7 @@ app.get('/subscribe', async (req, res) => {
     }
 });
 
-// Success and cancel routes
+// Success routes 
 app.get('/success', async (req, res) => {
     const session = await stripe.checkout.sessions.retrieve(req.query.session_id, {
         expand: ['subscription', 'subscription.plan.product'],
@@ -140,20 +140,17 @@ app.get('/success', async (req, res) => {
     res.send('<h1>Subscribed successfully</h1>');
 });
 
+// cancel routes
 app.get('/cancel', (req, res) => {
     res.redirect('/');
 });
-
-
-// Import Stripe
-// const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 
 // Route to get all customer IDs
 app.get('/api/get-all-customers', async (req, res) => {
     try {
         // Fetch the list of all customers from Stripe
         const customers = await stripe.customers.list({ limit: 100 });
-        
+
         // Map customer data to just customer IDs
         const customerIds = customers.data.map(customer => customer.id);
 
@@ -213,22 +210,6 @@ app.get('/customers', async (req, res) => {
     }
 });
 
-
-
-
-
-
-
-// Customer billing portal route
-app.get('/customers/:customerId', async (req, res) => {
-    const portalSession = await stripe.billingPortal.sessions.create({
-        customer: req.params.customerId,
-        return_url: `${process.env.BASE_URL}/`,
-    });
-
-    res.redirect(portalSession.url);
-});
-
 // Webhook endpoint for Stripe events
 app.post('/webhook', express.raw({ type: 'application/json' }), (req, res) => {
     const sig = req.headers['stripe-signature'];
@@ -265,13 +246,14 @@ app.post('/webhook', express.raw({ type: 'application/json' }), (req, res) => {
     res.send();
 });
 
+// Coupon validation Checkpoint
 app.post('/validate-coupon', async (req, res) => {
     try {
         const { coupon } = req.body;
-        
+
         // Retrieve the coupon from Stripe
         const couponObject = await stripe.coupons.retrieve(coupon);
-        
+
         res.json({
             success: true,
             coupon: {

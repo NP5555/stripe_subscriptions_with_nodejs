@@ -2,153 +2,103 @@
 
 <img src="./assets/Stripe Integration .png">
 
-This project implements a subscription management system using Node.js, Express, and Stripe's API. It allows users to manage subscriptions, handle payments, and validate coupons easily.
-
-## Table of Contents
-
-- [Features](#features)
-- [Installation](#installation)
-- [Usage](#usage)
-- [API Endpoints](#api-endpoints)
-- [Webhooks](#webhooks)
-- [Environment Variables](#environment-variables)
-- [Contributing](#contributing)
-- [License](#license)
+# This project is a simple subscription service built using Express.js and Stripe's payment processing API. It allows users to view available subscription plans, subscribe to services, and manage their subscriptions.
 
 ## Features
 
-- View subscription plans and corresponding prices.
-- Subscribe to plans with Stripe Checkout.
-- Handle coupon validation.
-- Redirect users to a billing portal for managing subscriptions.
-- Listen to Stripe webhooks for subscription updates.
+- List all available subscription plans and their prices.
+- Create a subscription session and redirect users to Stripe Checkout.
 
-## Installation
+# Retrieve and display customers along with their subscription details.
 
-1. **Clone the Repository**
+<img src="./assets/coustomers-stripe.png">
+
+- Validate coupon codes for discounted subscriptions.
+- Handle webhook events from Stripe for subscription management.
+
+## Tech Stack
+
+- Node.js
+- Express.js
+- Stripe API
+- EJS (for rendering views)
+- dotenv (for environment variable management)
+
+## Prerequisites
+
+Make sure you have the following installed:
+
+- [Node.js](https://nodejs.org/)
+- A Stripe account (to get your API keys)
+
+## Getting Started
+
+1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/yourusername/subscription-management-system.git
-   cd subscription-management-system
+   git clone https://github.com/yourusername/stripe-subscription-service.git
+   cd stripe-subscription-service
    ```
 
-2. **Install Dependencies**
+2. **Install dependencies**
 
    ```bash
    npm install
    ```
 
-3. **Setup Environment Variables**
+3. **Set up environment variables**
 
-   Create a `.env` file in the root directory and add the following variables:
+   Create a `.env` file in the root directory of the project and add your Stripe API keys and other relevant information:
 
    ```plaintext
    STRIPE_SECRET_KEY=your_stripe_secret_key
-   STRIPE_WEBHOOK_SECRET_KEY=your_stripe_webhook_secret_key
+   STRIPE_WEBHOOK_SECRET_KEY=your_stripe_webhook_secret
    BASE_URL=http://localhost:3000
    ```
 
-   Replace `your_stripe_secret_key` and `your_stripe_webhook_secret_key` with your actual Stripe keys.
-
-## Usage
-
-1. **Run the Server**
+4. **Run the application**
 
    ```bash
    npm start
    ```
 
-   The server will start on port 3000.
-
-2. **Access the Application**
-
-   Open your web browser and go to `http://localhost:3000`.
+   The server will start on `http://localhost:3000`.
 
 ## API Endpoints
 
-### 1. Home Route
+- `GET /`: Returns the main home page.
+- `GET /get-price/:productId`: Get price details for a specific product by ID.
+- `GET /api/get-all-prices`: List all active prices from Stripe.
+- `GET /subscribe`: Redirects to Stripe Checkout for subscribing to a plan.
+- `GET /success`: Success page after subscription.
+- `GET /cancel`: Redirect back to home page if the subscription is canceled.
+- `GET /api/get-all-customers`: Retrieve IDs of all customers from Stripe.
+- `GET /customers`: Display all customers and their subscription details in a page.
+- `POST /webhook`: Endpoint for handling webhook events from Stripe.
+- `POST /validate-coupon`: Validate a coupon code.
 
-- **GET** `/`
+## Webhook Handling
 
-  Renders the main page of the application.
+This application listens for Stripe webhook events such as:
+- `checkout.session.completed`
+- `invoice.paid`
+- `invoice.payment_failed`
+- `customer.subscription.updated`
 
-### 2. Get Price by Product ID
-
-- **GET** `/get-price/:productId`
-
-  Retrieves price details for a specific product.
-
-  **Parameters:**
-  - `productId`: ID of the product.
-
-### 3. Get All Prices
-
-- **GET** `/api/get-all-prices`
-
-  Fetches all active prices and their corresponding product names.
-
-### 4. Subscribe to a Plan
-
-- **GET** `/subscribe`
-
-  Subscribes a user to a specific plan.
-
-  **Query Parameters:**
-  - `plan`: Name of the subscription plan.
-  - `coupon` (optional): Coupon code to apply.
-
-### 5. Success Route
-
-- **GET** `/success`
-
-  Displays a message upon successful subscription.
-
-### 6. Cancel Route
-
-- **GET** `/cancel`
-
-  Redirects users back to the home page after canceling the subscription.
-
-### 7. Customer Billing Portal
-
-- **GET** `/customers/:customerId`
-
-  Redirects to Stripe's billing portal for managing subscriptions.
-
-### 8. Webhook
-
-- **POST** `/webhook`
-
-  Receives and handles webhook events from Stripe.
-
-### 9. Validate Coupon
-
-- **POST** `/validate-coupon`
-
-  Validates if a coupon is valid.
-
-  **Request Body:**
-  - `coupon`: The coupon code to validate.
-
-## Webhooks
-
-This application listens for the following events from Stripe:
-
-- `checkout.session.completed` - Triggered when a new subscription is started.
-- `invoice.paid` - Triggered when an invoice is successfully paid.
-- `invoice.payment_failed` - Triggered when an invoice payment fails.
-- `customer.subscription.updated` - Triggered when a subscription is updated.
-
-## Environment Variables
-
-- `STRIPE_SECRET_KEY`: Your Stripe secret API key.
-- `STRIPE_WEBHOOK_SECRET_KEY`: Your Stripe webhook secret key.
-- `BASE_URL`: The base URL for your application (typically localhost during development).
-
-## Contributing
-
-Feel free to submit issues or pull requests. Ensure that your code adheres to the project's coding standards.
+You will need to configure your Stripe account to send webhook events to `/webhook`.
 
 ## License
 
-This project is licensed under the MIT License. See the LICENSE file for details.
+This project is licensed under the MIT License.
+
+## Acknowledgments
+
+- [Stripe](https://stripe.com/docs) for their payment processing API.
+- [Express.js](https://expressjs.com/) for their web framework.
+- [EJS](https://ejs.co/) for server-side templating.
+
+Feel free to modify, fork, or contribute to the project!
+
+```
+
+Make sure to replace `yourusername` in the clone URL with your actual GitHub username and customize the project details as necessary!
