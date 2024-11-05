@@ -11,7 +11,7 @@ Getting Started
 1. Clone the Repository
 bash
 Copy code
-git clone https://github.com/your-username/stripe-subscriptions-nodejs.git
+git clone https://github.com/NP5555/stripe_subscriptions_with_nodejs
 cd stripe-subscriptions-nodejs
 2. Install Dependencies
 bash
@@ -50,7 +50,7 @@ Make sure you have the following installed:
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/yourusername/stripe-subscription-service.git
+   git clone https://github.com/NP5555/stripe_subscriptions_with_nodejs
    cd stripe-subscription-service
    ```
 
@@ -112,7 +112,3 @@ This project is licensed under the MIT License.
 - [EJS](https://ejs.co/) for server-side templating.
 
 Feel free to modify, fork, or contribute to the project!
-
-```
-
-Make sure to replace `yourusername` in the clone URL with your actual GitHub username and customize the project details as necessary!
